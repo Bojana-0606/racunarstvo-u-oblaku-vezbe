@@ -1,0 +1,29 @@
+services:
+  db:
+    image: bojana0606/crud-knjige-db:1.0
+    build: ./db
+    environment:
+      POSTGRES_DB: knjige
+      POSTGRES_USER: knjige
+      POSTGRES_PASSWORD: knjige_demo
+    volumes:
+      - podaci_knjige:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U knjige -d knjige"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  api:
+    image: bojana0606/crud-knjige-api:1.0
+    build: ./api
+    environment:
+      DATABASE_URL: postgresql+psycopg://knjige:knjige_demo@db:5432/knjige
+    ports:
+      - "8000:8000"
+    depends_on:
+      db:
+        condition: service_healthy
+
+volumes:
+  podaci_knjige:
