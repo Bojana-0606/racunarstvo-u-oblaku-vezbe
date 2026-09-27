@@ -1,0 +1,5 @@
+csv:
+  class: File
+  path: data/HousingData.csv
+target: MEDV
+k: 5
