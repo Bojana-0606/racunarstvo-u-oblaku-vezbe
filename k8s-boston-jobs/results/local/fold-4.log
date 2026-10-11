@@ -1,0 +1,13 @@
+{"k": 5, "rows": 506, "folds_created": 5}
+{
+  "target": "MEDV",
+  "model": "RandomForestRegressor(n_estimators=100, random_state=42)",
+  "train_rows": 244,
+  "test_rows": 101,
+  "RMSE": 6.4610599895155625,
+  "PRMSE_percent": 27.66404082161481,
+  "PRMSE_definition": "100 * RMSE / mean(abs(y_test))",
+  "MAE": 4.313554455445547,
+  "R2": 0.6003216259799982
+}
+RESULT_JSON={"target": "MEDV", "model": "RandomForestRegressor(n_estimators=100, random_state=42)", "train_rows": 244, "test_rows": 101, "RMSE": 6.4610599895155625, "PRMSE_percent": 27.66404082161481, "PRMSE_definition": "100 * RMSE / mean(abs(y_test))", "MAE": 4.313554455445547, "R2": 0.6003216259799982, "fold": 4, "k": 5}
