@@ -1,0 +1,71 @@
+name: zookeeper-ml
+
+x-app: &app
+  build: .
+  image: zookeeper-ml:1.0
+  restart: unless-stopped
+  depends_on:
+    zookeeper:
+      condition: service_healthy
+
+x-environment: &environment
+  ZK_HOSTS: zookeeper:2181
+  MODEL_DIR: /models
+  CLUSTER_TOKEN: ${CLUSTER_TOKEN:?Nedostaje CLUSTER_TOKEN}
+  PEER_URLS: http://server1:8000,http://server2:8000,http://server3:8000
+
+services:
+  zookeeper:
+    image: zookeeper:3.9
+    restart: unless-stopped
+    environment:
+      ZOO_STANDALONE_ENABLED: "true"
+    volumes:
+      - zk-data:/data
+      - zk-log:/datalog
+    healthcheck:
+      test: ["CMD", "zkServer.sh", "status"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+      start_period: 20s
+
+  server1:
+    <<: *app
+    environment:
+      <<: *environment
+      SERVER_ID: server1
+      SERVER_URL: http://server1:8000
+    ports:
+      - "8011:8000"
+    volumes:
+      - model1:/models
+
+  server2:
+    <<: *app
+    environment:
+      <<: *environment
+      SERVER_ID: server2
+      SERVER_URL: http://server2:8000
+    ports:
+      - "8012:8000"
+    volumes:
+      - model2:/models
+
+  server3:
+    <<: *app
+    environment:
+      <<: *environment
+      SERVER_ID: server3
+      SERVER_URL: http://server3:8000
+    ports:
+      - "8013:8000"
+    volumes:
+      - model3:/models
+
+volumes:
+  zk-data:
+  zk-log:
+  model1:
+  model2:
+  model3:

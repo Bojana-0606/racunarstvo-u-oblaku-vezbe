@@ -1,0 +1,8 @@
+fastapi==0.115.12
+uvicorn==0.34.2
+python-multipart==0.0.20
+kazoo==2.10.0
+requests==2.32.3
+pandas==2.2.3
+scikit-learn==1.6.1
+joblib==1.4.2
