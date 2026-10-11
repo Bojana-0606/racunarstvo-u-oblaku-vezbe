@@ -1,0 +1,6 @@
+__pycache__/
+*.pyc
+*.joblib
+results/
+k8s/
+.git/

@@ -1,0 +1,52 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: wine-ml
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: wine-ml
+  template:
+    metadata:
+      labels:
+        app: wine-ml
+    spec:
+      initContainers:
+        - name: copy-dataset
+          image: bojana0606/k8s-wine-ml:1.0
+          command:
+            - sh
+            - -c
+            - |
+              set -e
+              if [ ! -f /data/wine-quality-white-and-red.csv ]; then
+                cp /seed/wine-quality-white-and-red.csv /data/
+              fi
+          volumeMounts:
+            - name: wine-data
+              mountPath: /data
+      containers:
+        - name: wine-ml
+          image: bojana0606/k8s-wine-ml:1.0
+          ports:
+            - containerPort: 5000
+          env:
+            - name: DATA_DIR
+              value: /data
+          resources:
+            requests:
+              cpu: "250m"
+              memory: "256Mi"
+            limits:
+              cpu: "1"
+              memory: "1Gi"
+          volumeMounts:
+            - name: wine-data
+              mountPath: /data
+      volumes:
+        - name: wine-data
+          persistentVolumeClaim:
+            claimName: wine-ml-data
